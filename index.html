@@ -13,7 +13,6 @@
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'G-NWDER4SK1D');
   </script>
 </head>
@@ -36,6 +35,33 @@
     </div>
   </div>
   <script>
+    // --- Screen Wake Lock ---
+    let wakeLock = null;
+    const requestWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator && !wakeLock) {
+          wakeLock = await navigator.wakeLock.request('screen');
+          console.log('Wake Lock is active!');
+
+          wakeLock.addEventListener('release', () => {
+            console.log('Wake Lock was released');
+            wakeLock = null;
+          });
+        }
+      } catch (err) {
+        console.error(`${err.name}, ${err.message}`);
+      }
+    };
+
+    // Request wake lock on first interaction
+    document.addEventListener('pointerdown', requestWakeLock, { once: true });
+    // Re-request if visibility changes (e.g., user switches tabs and comes back)
+    document.addEventListener('visibilitychange', async () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        await requestWakeLock();
+      }
+    });
+
     var canvas = document.querySelector("#unity-canvas");
 
     // Shows a temporary message banner/ribbon for a few seconds, or
@@ -64,12 +90,12 @@
     }
 
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/4875771b44ac9f6f4e531d56ff706cff.loader.js";
+    var loaderUrl = buildUrl + "/92b27f0acb7c5df439df680767b9fa9b.loader.js";
     var config = {
       arguments: [],
-      dataUrl: buildUrl + "/ea616adfb18d01eec392562ddec26496.data.unityweb",
+      dataUrl: buildUrl + "/4bdfb49457dfeb7a8e8a4cfeed377be2.data.unityweb",
       frameworkUrl: buildUrl + "/4a1d1eaf9cb3b17d9eea26f4b32e7376.framework.js.unityweb",
-      codeUrl: buildUrl + "/7ad066bcba306ed7af8506751af0e746.wasm.unityweb",
+      codeUrl: buildUrl + "/e8fd9eff47898fddfb9c4a10dd4bc8b1.wasm.unityweb",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "Subtropic",
       productName: "Mcdonalds",
